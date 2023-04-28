@@ -3,14 +3,15 @@ package me.seebrock3r.elevationtester.widget
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.ColorStateList
-import android.graphics.Color
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import androidx.annotation.ColorInt
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.withStyledAttributes
+import me.seebrock3r.elevationtester.Argb
 import me.seebrock3r.elevationtester.R
 import me.seebrock3r.elevationtester.databinding.ViewColorBinding
+import kotlin.properties.Delegates
 
 class ColorView @JvmOverloads constructor(
     context: Context,
@@ -26,19 +27,20 @@ class ColorView @JvmOverloads constructor(
             binding.colorViewLabel.text = text
         }
 
-    @ColorInt
-    var color: Int = Color.BLACK
-        set(newColor) {
-            field = newColor
-            onColorChanged()
-        }
+    var argb: Argb by Delegates.observable(Argb.DEFAULT) { _, _, _ ->
+        onColorChanged()
+    }
+
+    @get:ColorInt
+    val color: Int
+        get() = argb.toColor()
 
     var onColorChangedListener: ((view: ColorView) -> Unit)? = null
 
     init {
         context.withStyledAttributes(attrs, R.styleable.ColorView, defStyleAttr) {
             if (hasValue(R.styleable.ColorView_android_text)) text = getString(R.styleable.ColorView_android_text)
-            if (hasValue(R.styleable.ColorView_color)) color = getColor(R.styleable.ColorView_color, color)
+//            if (hasValue(R.styleable.ColorView_color)) color = getColor(R.styleable.ColorView_color, color)
         }
 
         isClickable = true

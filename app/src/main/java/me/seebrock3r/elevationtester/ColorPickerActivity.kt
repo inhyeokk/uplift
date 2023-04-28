@@ -9,7 +9,6 @@ import android.graphics.Color
 import android.graphics.Rect
 import android.os.Bundle
 import android.widget.SeekBar
-import androidx.annotation.ColorInt
 import androidx.annotation.FloatRange
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.graphics.alpha
@@ -19,11 +18,11 @@ import me.seebrock3r.elevationtester.widget.BetterSeekListener
 class ColorPickerActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityColorPickerBinding
-    private val selectedColor: Int
-        get() = binding.dialogColorWheel.selectedColor.setAlphaTo(binding.dialogColorAlpha.progress)
+    private val selectedArgb: Argb
+        get() = Argb.fromRGB(binding.dialogColorWheel.selectedColor).apply { a = binding.dialogAlphaValue.text.toString().toFloat() * 255 }
 
-    private val initialColor: Int
-        get() = intent.getIntExtra(EXTRA_COLOR, Color.BLACK)
+    private val initialArgb: Argb
+        get() = intent.getParcelableExtra(EXTRA_COLOR) ?: Argb.DEFAULT
 
     private var changingBrightnessFromCode = false
 
@@ -39,7 +38,7 @@ class ColorPickerActivity : AppCompatActivity() {
 
         binding.dialogTitle.text = intent.getStringExtra(EXTRA_TITLE)
 
-        val color = initialColor
+        val color = initialArgb.toColor()
         setupAlphaControls(color)
         setupBrightnessControls(color)
         setupColorWheel()
@@ -61,10 +60,10 @@ class ColorPickerActivity : AppCompatActivity() {
             object : BetterSeekListener {
                 @SuppressLint("SetTextI18n")
                 override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
-                    val newSelectedColor = binding.dialogColorWheel.selectedColor.setAlphaTo(progress)
-                    binding.dialogColorPreview.backgroundTintList = ColorStateList.valueOf(newSelectedColor)
                     val alpha = progress / binding.dialogColorAlpha.max.toFloat()
                     binding.dialogAlphaValue.text = formatAsTwoPlacesDecimal(alpha)
+                    val newSelectedColor = selectedArgb.toColor()
+                    binding.dialogColorPreview.backgroundTintList = ColorStateList.valueOf(newSelectedColor)
                     binding.dialogColorWheel.onColorChangedListener?.invoke(newSelectedColor)
                 }
             }
@@ -95,12 +94,12 @@ class ColorPickerActivity : AppCompatActivity() {
     private fun setupColorWheel() {
         binding.dialogColorWheel.onColorChangedListener = { _ ->
             changingBrightnessFromCode = true
-            binding.dialogColorBrightness.progress = (selectedColor.brightness * binding.dialogColorBrightness.max).toInt()
+            binding.dialogColorBrightness.progress = (selectedArgb.toColor().brightness * binding.dialogColorBrightness.max).toInt()
             changingBrightnessFromCode = false
 
-            binding.dialogColorPreview.backgroundTintList = ColorStateList.valueOf(selectedColor)
+            binding.dialogColorPreview.backgroundTintList = ColorStateList.valueOf(selectedArgb.toColor())
 
-            setResult(Activity.RESULT_OK, Intent().apply { putExtra(EXTRA_COLOR, selectedColor) })
+            setResult(Activity.RESULT_OK, Intent().apply { putExtra(EXTRA_COLOR, selectedArgb) })
         }
     }
 
@@ -110,15 +109,14 @@ class ColorPickerActivity : AppCompatActivity() {
         private const val EXTRA_COLOR = "ColorPickerActivity_color"
         private const val EXTRA_ORIGIN_BOUNDS = "ColorPickerActivity_origin_bounds"
 
-        fun createIntent(context: Context, title: String, @ColorInt color: Int, originBounds: Rect) =
+        fun createIntent(context: Context, title: String, argb: Argb, originBounds: Rect) =
             Intent(context, ColorPickerActivity::class.java).apply {
                 putExtra(EXTRA_TITLE, title)
-                putExtra(EXTRA_COLOR, color)
+                putExtra(EXTRA_COLOR, argb)
                 putExtra(EXTRA_ORIGIN_BOUNDS, originBounds)
             }
 
-        @ColorInt
         fun extractResultFrom(resultData: Intent?) =
-            resultData?.getIntExtra(EXTRA_COLOR, Color.BLACK)
+            resultData?.getParcelableExtra(EXTRA_COLOR) ?: Argb.DEFAULT
     }
 }

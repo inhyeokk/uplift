@@ -12,7 +12,7 @@ buildscript {
 }
 
 plugins {
-    kotlin("jvm") version "1.4.0"
+    kotlin("jvm") version "1.4.20"
 }
 
 allprojects {
@@ -35,12 +35,13 @@ allprojects {
     }
 }
 
-val kotlinVersion = "1.4.0"
+val kotlinVersion = "1.4.20"
 val coroutinesVersion = "1.3.9"
 
 subprojects {
     apply(plugin = "com.android.application")
     apply(plugin = "kotlin-android")
+    apply(plugin = "kotlin-parcelize")
 
     dependencies {
         implementation(kotlin("stdlib-jdk7"))

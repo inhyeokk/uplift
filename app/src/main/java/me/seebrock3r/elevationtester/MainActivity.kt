@@ -198,8 +198,8 @@ class MainActivity : AppCompatActivity() {
             panelControlsBinding.ambientColor.onColorChangedListener = ::onColorChanged
             panelControlsBinding.spotColor.onColorChangedListener = ::onColorChanged
 
-            panelControlsBinding.ambientColor.color = Color.BLACK.setAlphaTo((0.039f * 255).toInt())
-            panelControlsBinding.spotColor.color = Color.BLACK.setAlphaTo((0.19f * 255).toInt())
+            panelControlsBinding.ambientColor.argb = Argb.DEFAULT
+            panelControlsBinding.spotColor.argb = Argb.DEFAULT
         } else {
             panelControlsBinding.ambientColor.isEnabled = false
             panelControlsBinding.spotColor.isEnabled = false
@@ -214,7 +214,7 @@ class MainActivity : AppCompatActivity() {
             if (colorView.id == R.id.ambientColor) R.string.color_picker_title_ambient else R.string.color_picker_title_spot
         )
         val boundsOnScreen = colorView.boundsOnScreen()
-        val intent = ColorPickerActivity.createIntent(this, title, colorView.color, boundsOnScreen)
+        val intent = ColorPickerActivity.createIntent(this, title, colorView.argb, boundsOnScreen)
 
         val requestCode = if (colorView.id == R.id.ambientColor) REQUEST_AMBIENT_COLOR else REQUEST_SPOT_COLOR
 
@@ -294,12 +294,8 @@ class MainActivity : AppCompatActivity() {
         }
 
         when (requestCode) {
-            REQUEST_AMBIENT_COLOR -> ColorPickerActivity.extractResultFrom(data)?.let { selectedColor ->
-                panelControlsBinding.ambientColor.color = selectedColor
-            }
-            REQUEST_SPOT_COLOR -> ColorPickerActivity.extractResultFrom(data)?.let { selectedColor ->
-                panelControlsBinding.spotColor.color = selectedColor
-            }
+            REQUEST_AMBIENT_COLOR -> panelControlsBinding.ambientColor.argb = ColorPickerActivity.extractResultFrom(data)
+            REQUEST_SPOT_COLOR -> panelControlsBinding.spotColor.argb = ColorPickerActivity.extractResultFrom(data)
         }
     }
 
@@ -318,8 +314,8 @@ class MainActivity : AppCompatActivity() {
         panelControlsBinding.xScaleBar.progress = panelControlsBinding.xScaleBar.max / 2
         panelControlsBinding.yScaleBar.progress = panelControlsBinding.yScaleBar.max / 2
         panelControlsBinding.yShiftBar.progress = panelControlsBinding.yShiftBar.max / 2
-        panelControlsBinding.ambientColor.color = Color.BLACK.setAlphaTo((0.039f * 255).toInt())
-        panelControlsBinding.spotColor.color = Color.BLACK.setAlphaTo((0.19f * 255).toInt())
+        panelControlsBinding.ambientColor.argb = Argb.DEFAULT
+        panelControlsBinding.spotColor.argb = Argb.DEFAULT
         return true
     }
 
