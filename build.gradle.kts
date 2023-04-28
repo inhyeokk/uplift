@@ -4,7 +4,6 @@ buildscript {
     repositories {
         google()
         mavenCentral()
-        jcenter()
     }
 
     dependencies {
@@ -20,18 +19,17 @@ allprojects {
     repositories {
         google()
         mavenCentral()
-        jcenter()
     }
 
     tasks {
         withType<JavaCompile> {
-            sourceCompatibility = "1.8"
-            targetCompatibility = "1.8"
+            sourceCompatibility = "11"
+            targetCompatibility = "11"
         }
 
         withType<KotlinCompile> {
             kotlinOptions {
-                jvmTarget = "1.8"
+                jvmTarget = "11"
             }
         }
     }
@@ -43,7 +41,6 @@ val coroutinesVersion = "1.3.9"
 subprojects {
     apply(plugin = "com.android.application")
     apply(plugin = "kotlin-android")
-    apply(plugin = "kotlin-android-extensions")
 
     dependencies {
         implementation(kotlin("stdlib-jdk7"))

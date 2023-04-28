@@ -16,16 +16,18 @@ import androidx.core.text.parseAsHtml
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import kotlinx.android.synthetic.main.dialog_elevation_tinting_info.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import me.seebrock3r.elevationtester.databinding.DialogElevationTintingInfoBinding
 import kotlin.coroutines.CoroutineContext
 
 class ElevationTintingInfoBottomSheet : BottomSheetDialogFragment(), CoroutineScope {
 
+    private var _binding: DialogElevationTintingInfoBinding? = null
+    private val binding get() = _binding!!
     private var job: Job? = null
 
     override val coroutineContext: CoroutineContext
@@ -40,11 +42,10 @@ class ElevationTintingInfoBottomSheet : BottomSheetDialogFragment(), CoroutineSc
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val contextThemeWrapper = ContextThemeWrapper(activity, R.style.Theme_Uplift)
-        val view = inflater.cloneInContext(contextThemeWrapper)
-            .inflate(R.layout.dialog_elevation_tinting_info, container, true)
-        view.findViewById<View>(R.id.closeButton).setOnClickListener { dismiss() }
-        view.findViewById<View>(R.id.learnMoreButton).setOnClickListener { openLearnMore() }
-        return view
+        _binding = DialogElevationTintingInfoBinding.inflate(inflater.cloneInContext(contextThemeWrapper), container, false)
+        binding.closeButton.setOnClickListener { dismiss() }
+        binding.learnMoreButton.setOnClickListener { openLearnMore() }
+        return binding.root
     }
 
     private fun openLearnMore() {
@@ -72,7 +73,7 @@ class ElevationTintingInfoBottomSheet : BottomSheetDialogFragment(), CoroutineSc
         launch {
             val parsedHtml = blurbHtml.parseHtml(codeTypeface, codeColor)
             launch(Dispatchers.Main) {
-                tintingInfoBlurb.text = parsedHtml
+                binding.tintingInfoBlurb.text = parsedHtml
             }
         }
     }
@@ -82,6 +83,11 @@ class ElevationTintingInfoBottomSheet : BottomSheetDialogFragment(), CoroutineSc
             // Using KTX's String.parseAsHtml
             parseAsHtml(tagHandler = CodeSpanHandler(codeTypeface, codeColor))
         }
+
+    override fun onDestroyView() {
+        _binding = null
+        super.onDestroyView()
+    }
 
     override fun onDestroy() {
         super.onDestroy()

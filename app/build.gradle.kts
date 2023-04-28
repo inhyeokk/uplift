@@ -9,6 +9,10 @@ android {
         versionName = "3.2.2"
     }
 
+    buildFeatures {
+        viewBinding = true
+    }
+
     packagingOptions {
         exclude("META-INF/atomicfu.kotlin_module")
     }

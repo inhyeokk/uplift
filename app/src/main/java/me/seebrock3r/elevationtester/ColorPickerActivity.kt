@@ -13,13 +13,14 @@ import androidx.annotation.ColorInt
 import androidx.annotation.FloatRange
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.graphics.alpha
-import kotlinx.android.synthetic.main.activity_color_picker.*
+import me.seebrock3r.elevationtester.databinding.ActivityColorPickerBinding
 import me.seebrock3r.elevationtester.widget.BetterSeekListener
 
 class ColorPickerActivity : AppCompatActivity() {
 
+    private lateinit var binding: ActivityColorPickerBinding
     private val selectedColor: Int
-        get() = dialogColorWheel.selectedColor.setAlphaTo(dialogColorAlpha.progress)
+        get() = binding.dialogColorWheel.selectedColor.setAlphaTo(binding.dialogColorAlpha.progress)
 
     private val initialColor: Int
         get() = intent.getIntExtra(EXTRA_COLOR, Color.BLACK)
@@ -28,14 +29,15 @@ class ColorPickerActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_color_picker)
+        binding = ActivityColorPickerBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         setResult(Activity.RESULT_CANCELED)
 
         DialogLayoutParameters.wrapHeight(this)
             .applyTo(window)
 
-        dialogTitle.text = intent.getStringExtra(EXTRA_TITLE)
+        binding.dialogTitle.text = intent.getStringExtra(EXTRA_TITLE)
 
         val color = initialColor
         setupAlphaControls(color)
@@ -43,36 +45,36 @@ class ColorPickerActivity : AppCompatActivity() {
         setupColorWheel()
 
         val cornerRadius = resources.getDimensionPixelSize(R.dimen.control_corner_material).toFloat()
-        dialogColorPreviewCheckerboard.outlineProvider = TweakableOutlineProvider(cornerRadius = cornerRadius)
-        dialogColorPreviewCheckerboard.clipToOutline = true
+        binding.dialogColorPreviewCheckerboard.outlineProvider = TweakableOutlineProvider(cornerRadius = cornerRadius)
+        binding.dialogColorPreviewCheckerboard.clipToOutline = true
 
-        dialogColorWheel.setColor(color)
+        binding.dialogColorWheel.setColor(color)
 
-        dialogClose.setOnClickListener { finish() }
+        binding.dialogClose.setOnClickListener { finish() }
     }
 
     private fun setupAlphaControls(color: Int) {
-        dialogColorAlpha.progress = color.alpha
-        dialogAlphaValue.text = formatAsTwoPlacesDecimal(color.alpha.toFloat() / 255F)
+        binding.dialogColorAlpha.progress = color.alpha
+        binding.dialogAlphaValue.text = formatAsTwoPlacesDecimal(color.alpha.toFloat() / 255F)
 
-        dialogColorAlpha.setOnSeekBarChangeListener(
+        binding.dialogColorAlpha.setOnSeekBarChangeListener(
             object : BetterSeekListener {
                 @SuppressLint("SetTextI18n")
                 override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
-                    val newSelectedColor = dialogColorWheel.selectedColor.setAlphaTo(progress)
-                    dialogColorPreview.backgroundTintList = ColorStateList.valueOf(newSelectedColor)
-                    val alpha = progress / dialogColorAlpha.max.toFloat()
-                    dialogAlphaValue.text = formatAsTwoPlacesDecimal(alpha)
-                    dialogColorWheel.onColorChangedListener?.invoke(newSelectedColor)
+                    val newSelectedColor = binding.dialogColorWheel.selectedColor.setAlphaTo(progress)
+                    binding.dialogColorPreview.backgroundTintList = ColorStateList.valueOf(newSelectedColor)
+                    val alpha = progress / binding.dialogColorAlpha.max.toFloat()
+                    binding.dialogAlphaValue.text = formatAsTwoPlacesDecimal(alpha)
+                    binding.dialogColorWheel.onColorChangedListener?.invoke(newSelectedColor)
                 }
             }
         )
     }
 
     private fun setupBrightnessControls(color: Int) {
-        dialogBrightnessValue.text = formatAsTwoPlacesDecimal(color.brightness)
+        binding.dialogBrightnessValue.text = formatAsTwoPlacesDecimal(color.brightness)
 
-        dialogColorBrightness.setOnSeekBarChangeListener(
+        binding.dialogColorBrightness.setOnSeekBarChangeListener(
             object : BetterSeekListener {
                 @SuppressLint("SetTextI18n")
                 override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
@@ -80,9 +82,9 @@ class ColorPickerActivity : AppCompatActivity() {
                         return
                     }
 
-                    val brightness = progress / dialogColorBrightness.max.toFloat()
-                    dialogColorWheel.setBrightness(brightness)
-                    dialogBrightnessValue.text = formatAsTwoPlacesDecimal(brightness)
+                    val brightness = progress / binding.dialogColorBrightness.max.toFloat()
+                    binding.dialogColorWheel.setBrightness(brightness)
+                    binding.dialogBrightnessValue.text = formatAsTwoPlacesDecimal(brightness)
                 }
             }
         )
@@ -91,18 +93,19 @@ class ColorPickerActivity : AppCompatActivity() {
     private fun formatAsTwoPlacesDecimal(@FloatRange value: Float) = "%.2f".format(value)
 
     private fun setupColorWheel() {
-        dialogColorWheel.onColorChangedListener = { _ ->
+        binding.dialogColorWheel.onColorChangedListener = { _ ->
             changingBrightnessFromCode = true
-            dialogColorBrightness.progress = (selectedColor.brightness * dialogColorBrightness.max).toInt()
+            binding.dialogColorBrightness.progress = (selectedColor.brightness * binding.dialogColorBrightness.max).toInt()
             changingBrightnessFromCode = false
 
-            dialogColorPreview.backgroundTintList = ColorStateList.valueOf(selectedColor)
+            binding.dialogColorPreview.backgroundTintList = ColorStateList.valueOf(selectedColor)
 
             setResult(Activity.RESULT_OK, Intent().apply { putExtra(EXTRA_COLOR, selectedColor) })
         }
     }
 
     companion object {
+
         private const val EXTRA_TITLE = "ColorPickerActivity_title"
         private const val EXTRA_COLOR = "ColorPickerActivity_color"
         private const val EXTRA_ORIGIN_BOUNDS = "ColorPickerActivity_origin_bounds"
