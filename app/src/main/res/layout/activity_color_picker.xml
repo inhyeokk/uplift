@@ -57,17 +57,6 @@
     app:layout_constraintBottom_toBottomOf="@id/dialogTitle"
     app:layout_constraintDimensionRatio="1" />
 
-  <me.seebrock3r.elevationtester.widget.ColorWheelView
-    android:id="@+id/dialogColorWheel"
-    android:layout_width="@dimen/match_constraint"
-    android:layout_height="@dimen/match_constraint"
-    android:maxHeight="300dp"
-    android:padding="24dp"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@id/dialogTitle"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintDimensionRatio="1" />
-
   <TextView
     android:id="@+id/dialogAlphaLabel"
     android:layout_width="wrap_content"
@@ -76,7 +65,7 @@
     android:gravity="start|center_vertical"
     android:text="@string/alpha_label"
     app:layout_constraintStart_toStartOf="@id/contentGuidelineStart"
-    app:layout_constraintTop_toBottomOf="@id/dialogColorWheel" />
+    app:layout_constraintTop_toBottomOf="@id/dialogTitle" />
 
   <SeekBar
     android:id="@+id/dialogColorAlpha"
@@ -102,40 +91,6 @@
     app:layout_constraintBottom_toBottomOf="@id/dialogAlphaLabel"
     tools:text="0.00" />
 
-  <TextView
-    android:id="@+id/dialogBrightnessLabel"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="16dp"
-    android:gravity="start|center_vertical"
-    android:text="@string/brightness_label"
-    app:layout_constraintStart_toStartOf="@id/contentGuidelineStart"
-    app:layout_constraintTop_toBottomOf="@id/dialogAlphaLabel" />
-
-  <SeekBar
-    android:id="@+id/dialogColorBrightness"
-    style="@style/Widget.Uplift.SeekBar"
-    android:layout_width="@dimen/match_constraint"
-    android:layout_height="@dimen/seekbar_height"
-    android:layout_marginStart="8dp"
-    android:layout_marginEnd="8dp"
-    android:max="@integer/max_brightness_progress"
-    app:layout_constraintStart_toEndOf="@id/dialogBrightnessLabel"
-    app:layout_constraintTop_toTopOf="@id/dialogBrightnessLabel"
-    app:layout_constraintEnd_toStartOf="@id/dialogBrightnessValue"
-    app:layout_constraintBottom_toBottomOf="@id/dialogBrightnessLabel"
-    tools:progress="10" />
-
-  <TextView
-    android:id="@+id/dialogBrightnessValue"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:gravity="end|center_vertical"
-    app:layout_constraintTop_toTopOf="@id/dialogBrightnessLabel"
-    app:layout_constraintEnd_toStartOf="@id/contentGuidelineEnd"
-    app:layout_constraintBottom_toBottomOf="@id/dialogBrightnessLabel"
-    tools:text="0.00" />
-
   <androidx.constraintlayout.widget.Guideline
     android:id="@+id/contentGuidelineStart"
     android:layout_width="wrap_content"
@@ -151,4 +106,3 @@
     app:layout_constraintGuide_end="16dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
-

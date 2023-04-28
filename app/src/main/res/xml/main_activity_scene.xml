@@ -45,8 +45,8 @@
   </ConstraintSet>
 
   <Transition
-    app:constraintSetStart="@id/constraints_main_collapsed"
-    app:constraintSetEnd="@id/constraints_main_expanded"
+    app:constraintSetStart="@id/constraints_main_expanded"
+    app:constraintSetEnd="@id/constraints_main_collapsed"
     app:motionInterpolator="linear"
     app:duration="200">
 
