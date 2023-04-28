@@ -17,4 +17,8 @@
 
   <color name="ic_launcher_background">@color/white</color>
 
+  <color name="daynight_white">#FFFFFF</color>
+  <color name="daynight_black">#000000</color>
+  <color name="daynight_black_20">#33000000</color>
+  <color name="daynight_background">#F5F6FA</color>
 </resources>

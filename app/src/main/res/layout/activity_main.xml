@@ -26,28 +26,36 @@
     android:layout_height="@dimen/match_constraint"
     android:paddingTop="@dimen/main_button_vertical_margin"
     android:paddingBottom="@dimen/main_button_vertical_margin"
+    android:background="@color/daynight_background"
     android:clipToPadding="false"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toBottomOf="@id/toolbar"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintBottom_toTopOf="@id/panelHeader">
 
-    <TextView
+    <androidx.cardview.widget.CardView
       android:id="@+id/mainButton"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_marginStart="@dimen/main_button_margin"
-      android:layout_marginEnd="@dimen/main_button_margin"
-      android:background="@drawable/btn_colored_material"
-      android:padding="@dimen/main_button_padding"
-      android:text="@string/use_controls_below"
-      android:textAppearance="@style/TextAppearance.Uplift.MainButton"
+      android:layout_margin="@dimen/main_button_margin"
+      android:foreground="@drawable/ripple_black20_item_transparent"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toTopOf="parent"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintBottom_toBottomOf="parent"
-      app:layout_constraintHorizontal_bias="0.5" />
+      app:layout_constraintHorizontal_bias="0.5"
+      app:cardCornerRadius="10dp"
+      app:cardBackgroundColor="@color/daynight_white">
 
+      <TextView
+        android:id="@+id/mainText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="@dimen/main_button_padding"
+        android:text="@string/use_controls_below"
+        android:textAppearance="@style/TextAppearance.Uplift.MainButton" />
+    </androidx.cardview.widget.CardView>
   </androidx.constraintlayout.widget.ConstraintLayout>
 
   <include layout="@layout/include_header" />
@@ -56,7 +64,6 @@
     android:id="@+id/panelContainer"
     android:layout_width="@dimen/match_constraint"
     android:layout_height="@dimen/match_constraint"
-    android:background="@color/white"
     android:elevation="@dimen/panel_elevation"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toTopOf="@id/panelContentTopGuideline"

@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.annotation.TargetApi
 import android.app.Activity
 import android.content.Intent
-import android.content.res.Resources
 import android.graphics.Rect
 import android.os.Build
 import android.os.Bundle
@@ -13,7 +12,6 @@ import android.view.MenuItem
 import android.view.MotionEvent
 import android.view.View
 import android.widget.SeekBar
-import androidx.annotation.DimenRes
 import androidx.annotation.Px
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
@@ -65,8 +63,7 @@ class MainActivity : AppCompatActivity() {
 
         panelExpanded()
 
-        val initialButtonElevationDp = resources.getDimensionDpSize(R.dimen.main_button_initial_elevation).roundToInt()
-        panelControlsBinding.elevationBar.progress = initialButtonElevationDp
+        setupInitialValue(ServiceType.A)
     }
 
     private fun setupPanelHeaderControls() {
@@ -94,12 +91,12 @@ class MainActivity : AppCompatActivity() {
 
     private fun panelCollapsed() {
         headerBinding.expandCollapseImage.isChecked = false
-        binding.mainButton.text = getString(R.string.drag_up_and_down)
+        binding.mainText.text = getString(R.string.drag_up_and_down)
     }
 
     private fun panelExpanded() {
         headerBinding.expandCollapseImage.isChecked = true
-        binding.mainButton.text = getString(R.string.use_controls_below)
+        binding.mainText.text = getString(R.string.use_controls_below)
     }
 
     private fun setupElevationControls() {
@@ -110,12 +107,11 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         )
-        panelControlsBinding.elevationValue.text = getString(R.string.elevation_value, 0)
     }
 
     private fun setElevationDp(elevationDp: Int) {
         val elevationPixel = elevationDp * resources.displayMetrics.density
-        binding.mainButton.elevation = elevationPixel
+        binding.mainButton.cardElevation = elevationPixel
         panelControlsBinding.elevationValue.text = getString(R.string.elevation_value, elevationDp)
     }
 
@@ -126,9 +122,6 @@ class MainActivity : AppCompatActivity() {
             panelControlsBinding.spotColor.setOnClickListener { onColorPickerClicked(panelControlsBinding.spotColor) }
             panelControlsBinding.ambientColor.onColorChangedListener = ::onColorChanged
             panelControlsBinding.spotColor.onColorChangedListener = ::onColorChanged
-
-            panelControlsBinding.ambientColor.argb = Argb.DEFAULT
-            panelControlsBinding.spotColor.argb = Argb.DEFAULT
         } else {
             panelControlsBinding.ambientColor.isEnabled = false
             panelControlsBinding.spotColor.isEnabled = false
@@ -211,6 +204,13 @@ class MainActivity : AppCompatActivity() {
         return true
     }
 
+    private fun setupInitialValue(serviceType: ServiceType) {
+        setElevationDp(serviceType.elevation)
+        panelControlsBinding.elevationBar.progress = serviceType.elevation
+        panelControlsBinding.ambientColor.argb = Argb.fromAlpha(serviceType.ambient)
+        panelControlsBinding.spotColor.argb = Argb.fromAlpha(serviceType.spot)
+    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (resultCode != Activity.RESULT_OK) {
             super.onActivityResult(requestCode, resultCode, data)
@@ -229,15 +229,21 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId != R.id.menu_reset) {
-            return super.onOptionsItemSelected(item)
+        return when (item.itemId) {
+            R.id.menu_a -> {
+                setupInitialValue(ServiceType.A)
+                true
+            }
+            R.id.menu_b -> {
+                setupInitialValue(ServiceType.B)
+                true
+            }
+            R.id.menu_c -> {
+                setupInitialValue(ServiceType.C)
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
         }
-
-        val initialButtonElevationDp = resources.getDimensionDpSize(R.dimen.main_button_initial_elevation).roundToInt()
-        panelControlsBinding.elevationBar.progress = initialButtonElevationDp
-        panelControlsBinding.ambientColor.argb = Argb.DEFAULT
-        panelControlsBinding.spotColor.argb = Argb.DEFAULT
-        return true
     }
 }
 
@@ -252,6 +258,3 @@ private fun View.boundsOnScreen(): Rect {
         locationOnScreen[1] + height
     )
 }
-
-private fun Resources.getDimensionDpSize(@DimenRes dimensionResId: Int): Float =
-    getDimensionPixelSize(dimensionResId) / displayMetrics.density

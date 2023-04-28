@@ -30,7 +30,7 @@ data class Argb(
     companion object {
 
         val DEFAULT = Argb(0.08f * 255, 0f, 0f, 0f)
-
+        fun fromAlpha(alpha: Float) = Argb(alpha * 255, 0f, 0f, 0f)
         fun fromRGB(@ColorInt color: Int) = Argb(0f, color.red.toFloat(), color.green.toFloat(), color.blue.toFloat())
     }
 }
