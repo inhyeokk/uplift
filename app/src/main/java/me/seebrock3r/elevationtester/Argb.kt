@@ -1,7 +1,6 @@
 package me.seebrock3r.elevationtester
 
 import android.graphics.Color
-import android.os.Build
 import android.os.Parcelable
 import androidx.annotation.ColorInt
 import androidx.annotation.FloatRange
@@ -19,13 +18,7 @@ data class Argb(
 ) : Parcelable {
 
     @ColorInt
-    fun toColor(): Int {
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            Color.argb(a / 255, r / 255, g / 255, b / 255)
-        } else {
-            Color.argb(a.toInt() / 255, r.toInt() / 255, g.toInt() / 255, b.toInt() / 255)
-        }
-    }
+    fun toColor() = Color.argb(a / 255, r / 255, g / 255, b / 255)
 
     companion object {
 

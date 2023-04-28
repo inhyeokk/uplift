@@ -7,12 +7,9 @@ buildscript {
     }
 
     dependencies {
-        classpath("com.android.tools.build:gradle:4.0.1")
+        classpath("com.android.tools.build:gradle:7.4.2")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.8.20")
     }
-}
-
-plugins {
-    kotlin("jvm") version "1.4.20"
 }
 
 allprojects {
@@ -35,23 +32,6 @@ allprojects {
     }
 }
 
-val kotlinVersion = "1.4.20"
-val coroutinesVersion = "1.3.9"
-
-subprojects {
-    apply(plugin = "com.android.application")
-    apply(plugin = "kotlin-android")
-    apply(plugin = "kotlin-parcelize")
-
-    dependencies {
-        implementation(kotlin("stdlib-jdk7"))
-        implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
-        implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion")
-    }
-}
-
-tasks {
-    clean {
-        delete(rootProject.buildDir)
-    }
+tasks.register("clean", Delete::class) {
+    delete(rootProject.buildDir)
 }

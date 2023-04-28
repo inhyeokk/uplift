@@ -211,6 +211,7 @@ class MainActivity : AppCompatActivity() {
         panelControlsBinding.spotColor.argb = Argb.fromAlpha(serviceType.spot)
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (resultCode != Activity.RESULT_OK) {
             super.onActivityResult(requestCode, resultCode, data)
