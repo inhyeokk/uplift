@@ -19,7 +19,7 @@ class ColorPickerActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityColorPickerBinding
     private val selectedArgb: Argb
-        get() = Argb.fromRGB(Color.BLACK).apply { a = binding.dialogAlphaValue.text.toString().toFloat() * 255 }
+        get() = Argb.fromAlpha(binding.dialogAlphaValue.text.toString().toFloat())
 
     private val initialArgb: Argb
         get() = intent.getParcelableExtra(EXTRA_COLOR) ?: Argb.DEFAULT

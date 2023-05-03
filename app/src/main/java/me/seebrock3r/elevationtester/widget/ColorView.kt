@@ -52,7 +52,7 @@ class ColorView @JvmOverloads constructor(
     @SuppressLint("SetTextI18n") // This doesn't require i18n, it's a hex integer representation
     private fun onColorChanged() {
         binding.colorViewColor.backgroundTintList = ColorStateList.valueOf(color)
-        binding.colorViewValue.text = "${(argb.a / 255 * 100).toInt()}% ${String.format("#%08X", 0xFFFFFFFF and color.toLong())} "
+        binding.colorViewValue.text = "${(argb.a * 100).toInt()}% ${String.format("#%08X", 0xFFFFFFFF and color.toLong())} "
 
         onColorChangedListener?.invoke(this)
     }
